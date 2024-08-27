@@ -1,18 +1,36 @@
 ﻿Console.WriteLine("Plan Your Heist!");
 
-TeamMember teamMember = new TeamMember
-{
-    Name = GetValidStringInput("Enter team member's name: "),
-    SkillLevel = GetValidIntegerInput("Enter team member's skill level (1 - 10): "),
-    Courage = GetValidDecimalInput("Enter team member's courage factor (0.0 - 2.0): ")
-};
+List<TeamMember> teamMembers = new List<TeamMember>();
 
-//Display Team Members information
-Console.WriteLine(@$"✅ Success!
-Team Member Info:
-  • Name: {teamMember.Name}
-  • Skill Level: {teamMember.SkillLevel}
-  • Courage Factor: {teamMember.Courage:F1}");
+while (true)
+{
+    string name = GetValidStringInput("Enter team member's name (or press Enter to finish): ");
+    if (string.IsNullOrEmpty(name))
+    {
+        break;
+    }
+   
+    TeamMember teamMember = new TeamMember
+    {
+        Name = name,
+        SkillLevel = GetValidIntegerInput("Enter team member's skill level (1 - 10): "),
+        Courage = GetValidDecimalInput("Enter team member's courage factor (0.0 - 2.0): ")
+    };
+
+    teamMembers.Add(teamMember); 
+    Console.WriteLine($"✅ Success! You have {teamMembers.Count} team member(s).");
+}
+
+if (teamMembers.Count > 0)
+{
+    Console.Clear();
+    Console.WriteLine("Your Team Members:");
+    foreach (TeamMember member in teamMembers)
+    {
+        Console.WriteLine(@$"• {member.Name} | Skill Level: {member.SkillLevel} | Courage Factor: {member.Courage:F1}");
+    }
+}
+
 
 string GetValidStringInput(string prompt)
 {
@@ -20,7 +38,7 @@ string GetValidStringInput(string prompt)
     {
         Console.WriteLine(prompt);
         string input = Console.ReadLine();
-        if (!string.IsNullOrEmpty(input) && input.Length < 30)
+        if (input?.Length < 30)
         {
             return input;
         }
