@@ -1,8 +1,8 @@
 ﻿Console.WriteLine("Plan Your Heist!");
 
-List<TeamMember> teamMembers = new List<TeamMember>();
+int bankDifficulty = GetValidIntegerInput("Enter the bank's difficulty level (max 100): ", 1, 100);
 
-int bankDifficulty = 100;
+List<TeamMember> teamMembers = new List<TeamMember>();
 
 while (true)
 {
