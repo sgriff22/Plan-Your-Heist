@@ -2,6 +2,8 @@
 
 List<TeamMember> teamMembers = new List<TeamMember>();
 
+int bankDifficulty = 100;
+
 while (true)
 {
     string name = GetValidStringInput("Enter team member's name (or press Enter to finish): ");
@@ -13,7 +15,7 @@ while (true)
     TeamMember teamMember = new TeamMember
     {
         Name = name,
-        SkillLevel = GetValidIntegerInput("Enter team member's skill level (1 - 10): "),
+        SkillLevel = GetValidIntegerInput("Enter team member's skill level (1 - 20): "),
         Courage = GetValidDecimalInput("Enter team member's courage factor (0.0 - 2.0): ")
     };
 
@@ -21,15 +23,22 @@ while (true)
     Console.WriteLine($"✅ Success! You have {teamMembers.Count} team member(s).");
 }
 
-if (teamMembers.Count > 0)
+int skillSum = teamMembers.Sum(member => member.SkillLevel);
+
+if (skillSum >= bankDifficulty)
 {
-    Console.Clear();
-    Console.WriteLine("Your Team Members:");
-    foreach (TeamMember member in teamMembers)
-    {
-        Console.WriteLine(@$"• {member.Name} | Skill Level: {member.SkillLevel} | Courage Factor: {member.Courage:F1}");
-    }
+    Console.WriteLine("✅ Success! Your team's skill level is sufficient to handle the bank's difficulty.");
 }
+else if (teamMembers.Count == 0)
+{
+    Console.WriteLine("⛔ No team members entered. You will fail the heist.");
+}
+else
+{
+    Console.WriteLine("⛔ Failure. Your team's skill level is not strong enough to handle the bank's difficulty.");
+}
+
+
 
 
 string GetValidStringInput(string prompt)
@@ -54,13 +63,13 @@ int GetValidIntegerInput(string prompt)
         try
         {
             int input = int.Parse(Console.ReadLine());
-            if (input >= 1 && input <= 10)
+            if (input >= 1 && input <= 20)
             {
                 return input;
             }
             else
             {
-                Console.WriteLine("⛔ Skill Level needs to be a number between 1 - 10");
+                Console.WriteLine("⛔ Skill Level needs to be a number between 1 - 20");
             }
         }
         catch (FormatException)
