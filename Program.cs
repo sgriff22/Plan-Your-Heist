@@ -4,6 +4,11 @@ List<TeamMember> teamMembers = new List<TeamMember>();
 
 int bankDifficulty = 100;
 
+Random random = new Random();
+int luckValue = random.Next(-10, 11);
+
+bankDifficulty += luckValue;
+
 while (true)
 {
     string name = GetValidStringInput("Enter team member's name (or press Enter to finish): ");
@@ -23,23 +28,27 @@ while (true)
     Console.WriteLine($"✅ Success! You have {teamMembers.Count} team member(s).");
 }
 
-int skillSum = teamMembers.Sum(member => member.SkillLevel);
+if (teamMembers.Count > 0)
+{
+    
+    int skillSum = teamMembers.Sum(member => member.SkillLevel);
 
-if (skillSum >= bankDifficulty)
-{
-    Console.WriteLine("✅ Success! Your team's skill level is sufficient to handle the bank's difficulty.");
-}
-else if (teamMembers.Count == 0)
-{
-    Console.WriteLine("⛔ No team members entered. You will fail the heist.");
+    Console.WriteLine(@$"Your team's combined Skill Level: {skillSum}
+Bank difficulty level: {bankDifficulty}");
+
+    if (skillSum >= bankDifficulty)
+    {
+        Console.WriteLine("✅ Success! Your team's skill level is sufficient to handle the bank's difficulty.");
+    }
+    else
+    {
+        Console.WriteLine("⛔ Failure. Your team's skill level is not strong enough to handle the bank's difficulty.");
+    }
 }
 else
 {
-    Console.WriteLine("⛔ Failure. Your team's skill level is not strong enough to handle the bank's difficulty.");
+    Console.WriteLine("⛔ No team members entered. You will fail the heist.");
 }
-
-
-
 
 string GetValidStringInput(string prompt)
 {
