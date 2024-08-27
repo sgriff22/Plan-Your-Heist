@@ -4,11 +4,6 @@ List<TeamMember> teamMembers = new List<TeamMember>();
 
 int bankDifficulty = 100;
 
-Random random = new Random();
-int luckValue = random.Next(-10, 11);
-
-bankDifficulty += luckValue;
-
 while (true)
 {
     string name = GetValidStringInput("Enter team member's name (or press Enter to finish): ");
@@ -20,7 +15,7 @@ while (true)
     TeamMember teamMember = new TeamMember
     {
         Name = name,
-        SkillLevel = GetValidIntegerInput("Enter team member's skill level (1 - 20): "),
+        SkillLevel = GetValidIntegerInput("Enter team member's skill level (1 - 20): ", 1, 20),
         Courage = GetValidDecimalInput("Enter team member's courage factor (0.0 - 2.0): ")
     };
 
@@ -30,20 +25,36 @@ while (true)
 
 if (teamMembers.Count > 0)
 {
-    
-    int skillSum = teamMembers.Sum(member => member.SkillLevel);
+    int trialRuns = GetValidIntegerInput("Enter the number of trial runs: ", 1, 50);
+    int successfulRuns = 0;
+    int failedRuns = 0;
 
-    Console.WriteLine(@$"Your team's combined Skill Level: {skillSum}
-Bank difficulty level: {bankDifficulty}");
+    for (int i = 0; i <trialRuns; i++)
+    {
+        Random random = new Random();
+        int luckValue = random.Next(-10, 11);
+        int currentBankDifficulty = bankDifficulty + luckValue;
 
-    if (skillSum >= bankDifficulty)
-    {
-        Console.WriteLine("✅ Success! Your team's skill level is sufficient to handle the bank's difficulty.");
+        int skillSum = teamMembers.Sum(member => member.SkillLevel);
+
+        Console.WriteLine(@$"Trial Run {i + 1}:
+Your team's combined Skill Level: {skillSum}
+Bank difficulty level: {currentBankDifficulty}");
+
+        if (skillSum >= currentBankDifficulty)
+        {
+            Console.WriteLine("✅ Success! Your team's skill level is sufficient to handle the bank's difficulty.");
+            successfulRuns++;
+        }
+        else
+        {
+            Console.WriteLine("⛔ Failure. Your team's skill level is not strong enough to handle the bank's difficulty.");
+            failedRuns++;
+        }
     }
-    else
-    {
-        Console.WriteLine("⛔ Failure. Your team's skill level is not strong enough to handle the bank's difficulty.");
-    }
+    Console.WriteLine($@"Simulation Complete:
+- Successful Runs: {successfulRuns}
+- Failed Runs: {failedRuns}");
 }
 else
 {
@@ -64,7 +75,7 @@ string GetValidStringInput(string prompt)
     }
 }
 
-int GetValidIntegerInput(string prompt)
+int GetValidIntegerInput(string prompt, int min, int max)
 {
     while (true)
     {
@@ -72,13 +83,13 @@ int GetValidIntegerInput(string prompt)
         try
         {
             int input = int.Parse(Console.ReadLine());
-            if (input >= 1 && input <= 20)
+            if (input >= min && input <= max)
             {
                 return input;
             }
             else
             {
-                Console.WriteLine("⛔ Skill Level needs to be a number between 1 - 20");
+                Console.WriteLine($"⛔ Input needs to be a number between {min} - {max}");
             }
         }
         catch (FormatException)
